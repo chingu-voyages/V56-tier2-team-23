@@ -1,0 +1,1 @@
+// get infor from the session and return the user object
