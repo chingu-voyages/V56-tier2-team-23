@@ -6,17 +6,21 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate:icons": "svgr --out-dir src/components/icons --template svgr-template.js --typescript --icon --filename-case pascal public/icons && node scripts/generate-barrel-file.js"
   },
   "dependencies": {
     "clsx": "^2.1.1",
     "next": "15.4.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-icons": "^5.5.0"
+    "react-hook-form": "^7.60.0",
+    "react-icons": "^5.5.0",
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@svgr/cli": "^8.1.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

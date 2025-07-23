@@ -1,6 +1,6 @@
 import { cardData } from "@/utils/cardData";
 import AuthModule from "./Auth/page";
-import HomeCard from "./components/homeCard";
+import HomeCard from "@/components/homeCard";
 
 export default function HomePage() {
   return (

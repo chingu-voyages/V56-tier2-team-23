@@ -7,4 +7,16 @@
   --color-accentMain2: #d4d700;
   --color-accentSub: #ade8f4;
   --color-dark: #0f0e0e;
+
+  --color-steel-blue-50: #f3f6fc;
+  --color-steel-blue-100: #e5edf9;
+  --color-steel-blue-200: #c6daf1;
+  --color-steel-blue-300: #94bce5;
+  --color-steel-blue-400: #5a99d6;
+  --color-steel-blue-500: #4488ccab;
+  --color-steel-blue-600: #2561a4;
+  --color-steel-blue-700: #1f4e85;
+  --color-steel-blue-800: #1d426f;
+  --color-steel-blue-900: #1d395d;
+  --color-steel-blue-950: #14253d;
 }
