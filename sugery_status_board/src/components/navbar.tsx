@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { FaRegCalendar, FaBars, FaTimes } from "react-icons/fa";
 import clsx from "clsx";
-import Logo from "./icons/Logo";
+import { SvgLogo } from "./icons";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,11 +30,13 @@ export default function Navbar() {
       <nav className="w-full py-4 px-6 bg-viking-50 flex justify-between items-center relative z-30 shadow-md">
         {/* Logo and Title */}
         <Link href="/" className="flex items-center space-x-3">
-          <div className="flex flex-col leading-tight">
-            <Logo color="blue" width={150} height={40} />
-            <p className="text-xs sm:text-sm text-viking-700 mt-1">
-              Patient Progress Tracking
-            </p>
+          <div className="flex -ml-10 flex-col leading-tight ">
+            <SvgLogo
+              className="w-64 h-24"
+              circleColor="var(--color-viking-500)"
+              arcColor="var(--color-viking-600)"
+              textColor="var(--color-viking-500)"
+            />
           </div>
         </Link>
 

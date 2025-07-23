@@ -1,3 +1,4 @@
+import { SvgLogo } from "@/components/icons";
 import { cardData } from "@/utils/cardData";
 import AuthModule from "./Auth/page";
 import HomeCard from "@/components/homeCard";

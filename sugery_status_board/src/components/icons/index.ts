@@ -1,4 +1,6 @@
 export * from './Activity';
+export * from './Cancel';
+export * from './Clipboard';
 export * from './Copyright';
 export * from './Github';
 export * from './Logo';
