@@ -7,4 +7,16 @@
   --color-accentMain2: #d4d700;
   --color-accentSub: #ade8f4;
   --color-dark: #0f0e0e;
+
+  --color-viking-50: #edfcfe;
+  --color-viking-100: #d2f6fb;
+  --color-viking-200: #abebf6;
+  --color-viking-300: #71ddef;
+  --color-viking-400: #48cae4;
+  --color-viking-500: #14a6c6;
+  --color-viking-600: #1385a7;
+  --color-viking-700: #176b87;
+  --color-viking-800: #1b586f;
+  --color-viking-900: #1b4a5e;
+  --color-viking-950: #0c2f40;
 }
