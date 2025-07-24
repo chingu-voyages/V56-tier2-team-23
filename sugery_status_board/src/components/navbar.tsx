@@ -27,12 +27,12 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="w-full py-4 px-6 bg-viking-50 flex justify-between items-center relative z-30 shadow-md">
+      <nav className="w-full bg-viking-50 pr-5 flex justify-between items-center relative z-30 shadow-md">
         {/* Logo and Title */}
-        <Link href="/" className="flex items-center space-x-3">
-          <div className="flex -ml-10 flex-col leading-tight ">
+        <Link href="/" className="flex items-center">
+          <div className="flex -ml-5 flex-col leading-tight ">
             <SvgLogo
-              className="w-64 h-24"
+              className="lg:w-64 lg:h-24 w-48 h-16"
               circleColor="var(--color-viking-500)"
               arcColor="var(--color-viking-600)"
               textColor="var(--color-viking-500)"
@@ -47,7 +47,7 @@ export default function Navbar() {
         </div>
 
         {/* Desktop Nav */}
-        <div className="hidden sm:flex items-center space-x-4">
+        <div className="hidden sm:flex items-center">
           {navItems.map(({ href, label }) => (
             <Link
               key={href}

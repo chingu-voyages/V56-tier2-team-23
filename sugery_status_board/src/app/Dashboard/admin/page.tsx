@@ -6,8 +6,9 @@ import {
   SvgCancel,
   SvgClipboard,
 } from "@/components/icons";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { usePatientStore } from "@/store/patientStore";
 
 interface IFormInput {
   firstName: string;
@@ -24,6 +25,10 @@ interface ISearchFormInput {
   searchQuery: string;
 }
 
+interface Patient extends IFormInput {
+  patientNumber: string;
+}
+
 const generatePatientNumber = (): string => {
   const chars = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
   return Array(6)
@@ -33,6 +38,10 @@ const generatePatientNumber = (): string => {
 };
 
 function PatientInformation() {
+  const addPatient = usePatientStore((state) => state.addPatient);
+  const patients = usePatientStore((state) => state.patients);
+  const [searchResults, setSearchResults] = useState<Patient[]>([]);
+
   const {
     register,
     handleSubmit,
@@ -40,28 +49,41 @@ function PatientInformation() {
   } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     const patientNumber = generatePatientNumber();
-    const patientData = { ...data, patientNumber };
-    console.log(
-      "New patient created with data:",
-      JSON.stringify(patientData, null, 2)
-    );
-    // Here you would typically send the patientData to your backend to be stored.
+    const patientData: Patient = { ...data, patientNumber };
+    addPatient(patientData);
   };
 
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const {
     register: registerSearch,
-    handleSubmit: handleSearchSubmit,
     watch,
     setValue,
   } = useForm<ISearchFormInput>();
   const searchQuery = watch("searchQuery");
 
-  const onSearchSubmit: SubmitHandler<ISearchFormInput> = (data) => {
-    console.log("Search data:", data);
-    // You would typically perform a search here
-    setShowMobileSearch(false); // Close search after submission
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (searchQuery) {
+        const filteredPatients = patients.filter((patient) =>
+          patient.lastName.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setSearchResults(filteredPatients);
+      } else {
+        setSearchResults([]);
+      }
+    }, 300); // Debounce for 300ms
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchQuery, patients]);
+
+  const handleClearSearch = () => {
+    setValue("searchQuery", "");
+    setSearchResults([]);
   };
+
+  // No need for onSearchSubmit as filtering happens in useEffect
 
   return (
     <div className="container mx-auto lg:px-4 px-2 py-8">
@@ -73,7 +95,7 @@ function PatientInformation() {
           </h1>
         </div>
         <button
-          className="bg-viking-700 p-3 rounded-full lg:hidden text-viking-50 shadow-md hover:bg-viking-800 transition-colors flex justify-center items-center"
+          className="bg-viking-700 p-2 rounded-lg lg:hidden text-viking-50 shadow-md hover:bg-viking-800 transition-colors flex justify-center items-center"
           onClick={() => setShowMobileSearch(true)}
         >
           <SvgSearch />
@@ -218,9 +240,9 @@ function PatientInformation() {
                 {...register("phoneNumber", {
                   required: "Phone number is required",
                   pattern: {
-                    value: /^\+\d{1,3}\s?\d{9,12}$/,
+                    value: /^\+\d{1,3}\s?[\d\s]{9,15}$/,
                     message:
-                      "Invalid phone number format. Expected: +XXX XXXXXXXXXX",
+                      "Invalid phone number format. Expected: +XXX XXXXXXXXXX (allowing spaces)",
                   },
                 })}
               />
@@ -259,7 +281,7 @@ function PatientInformation() {
 
             <button
               type="submit"
-              className="bg-viking-700 text-white py-2 lg:py-2 rounded-md flex justify-center items-center gap-2 hover:bg-viking-800 transition-colors w-full font-semibold"
+              className="bg-viking-700  hover:cursor-pointer text-white py-2 lg:py-2 rounded-md flex justify-center items-center gap-2 hover:bg-viking-800 transition-colors w-full font-semibold"
             >
               <div className="flex justify-center items-center">
                 <SvgClipboard className="text-viking-50 size-6" />
@@ -269,7 +291,6 @@ function PatientInformation() {
           </form>
         </main>
         <div className="hidden lg:block lg:col-span-1 bg-viking-100 rounded-lg p-8">
-          {/* This is the empty rectangle for future content */}
           <div className="mb-8">
             <h2 className="text-xl font-semibold text-viking-900">
               Search Patients
@@ -278,29 +299,64 @@ function PatientInformation() {
               Find existing patients by last name.
             </p>
           </div>
-          <form
-            onSubmit={handleSearchSubmit(onSearchSubmit)}
-            className="flex items-center gap-2"
-          >
+          <form className="flex items-center gap-2">
             <input
               className="outline flex-1 rounded-sm px-2 py-1 border border-viking-300 focus:ring-2 focus:ring-viking-500 focus:border-transparent transition-all duration-200"
               placeholder="Enter last name to search"
               {...registerSearch("searchQuery")}
             />
             <button
-              type="submit"
-              className="bg-viking-400 rounded-full p-2 hover:bg-viking-500 transition-colors"
+              type="button"
+              className="bg-viking-400 rounded-full p-2 hover:cursor-pointer hover:bg-viking-500 transition-colors"
             >
               <SvgSearch className="text-viking-950" />
             </button>
             <button
               type="button"
-              onClick={() => console.log("Clear search")}
-              className="bg-viking-300 hover:bg-viking-400 text-xs font-semibold text-viking-950 px-2 py-1 rounded-sm"
+              onClick={handleClearSearch}
+              className="bg-viking-300 hover:bg-viking-400 text-xs hover:cursor-pointer font-semibold text-viking-950 px-2 py-1 rounded-sm"
             >
               Clear
             </button>
           </form>
+          {searchResults.length > 0 ? (
+            <div className="mt-6">
+              <div className="flex items-center gap-2 mb-4">
+                <SvgUserplus className="text-viking-700 size-5" />
+                <p className="text-viking-950 font-semibold">
+                  Found {searchResults.length} patient(s)
+                </p>
+              </div>
+              <div className="space-y-4">
+                {searchResults.map((patient) => (
+                  <div
+                    key={patient.patientNumber}
+                    className="bg-viking-50 p-4 rounded-lg shadow-sm"
+                  >
+                    <p className="font-bold text-viking-950">
+                      {patient.firstName} {patient.lastName}
+                    </p>
+                    <p className="text-sm text-viking-700">
+                      Patient Number: {patient.patientNumber}
+                    </p>
+                    <p className="text-sm text-viking-700">
+                      Contact: {patient.phoneNumber} | {patient.contactEmail}
+                    </p>
+                    <p className="text-sm text-viking-700">
+                      Address: {patient.streetAddress}, {patient.city},{" "}
+                      {patient.state}, {patient.country}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            searchQuery && (
+              <div className="mt-6 text-viking-700 text-center">
+                <p>No patients found matching "{searchQuery}".</p>
+              </div>
+            )
+          )}
         </div>
       </div>
 
@@ -308,7 +364,7 @@ function PatientInformation() {
       {showMobileSearch && (
         <div className="fixed inset-0 bg-viking-950/70 backdrop-blur-lg z-50 flex flex-col items-center justify-start p-4 pt-20">
           <button
-            className="absolute top-4 right-4 text-viking-50 border-2 border-viking-100 rounded-full text-3xl"
+            className="absolute top-4 right-4 text-viking-50 border-2 border-viking-100 rounded-lg text-3xl"
             onClick={() => setShowMobileSearch(false)}
           >
             <SvgCancel className="p-1" />
@@ -317,10 +373,7 @@ function PatientInformation() {
             Search Patients
           </h2>
 
-          <form
-            onSubmit={handleSearchSubmit(onSearchSubmit)}
-            className="w-full max-w-md"
-          >
+          <form className="w-full max-w-md">
             <div className="relative flex items-center">
               <SvgSearch className="absolute left-3 text-viking-50 size-6" />
               <input
@@ -331,14 +384,53 @@ function PatientInformation() {
               {searchQuery && (
                 <button
                   type="button"
-                  onClick={() => setValue("searchQuery", "")}
-                  className="absolute right-3 border-2 border-viking-100 rounded-full text-viking-50 hover:text-viking-900"
+                  onClick={handleClearSearch}
+                  className="absolute right-3 bg-viking-100 rounded-full text-viking-50 hover:text-viking-900"
                 >
-                  <SvgCancel className="size-6 p-1" />
+                  <SvgCancel className="size-6 p-1 text-viking-950" />
                 </button>
               )}
             </div>
           </form>
+
+          {searchResults.length > 0 ? (
+            <div className="mt-6 w-full max-w-md">
+              <div className="flex items-center gap-2 mb-4 text-viking-50">
+                <SvgUserplus className="size-6" />
+                <p className="font-semibold">
+                  Found {searchResults.length} patient(s)
+                </p>
+              </div>
+              <div className="space-y-4">
+                {searchResults.map((patient) => (
+                  <div
+                    key={patient.patientNumber}
+                    className="bg-viking-50 p-4 rounded-lg shadow-sm"
+                  >
+                    <p className="font-bold text-viking-950">
+                      {patient.firstName} {patient.lastName}
+                    </p>
+                    <p className="text-sm text-viking-700">
+                      Patient Number: {patient.patientNumber}
+                    </p>
+                    <p className="text-sm text-viking-700">
+                      Contact: {patient.phoneNumber} | {patient.contactEmail}
+                    </p>
+                    <p className="text-sm text-viking-700">
+                      Address: {patient.streetAddress}, {patient.city},{" "}
+                      {patient.state}, {patient.country}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            searchQuery && (
+              <div className="mt-6 w-full max-w-md text-viking-50 text-center">
+                <p>No patients found matching "{searchQuery}".</p>
+              </div>
+            )
+          )}
         </div>
       )}
     </div>

@@ -1,5 +1,4 @@
 import * as React from "react";
-import type { SVGProps } from "react";
 
 interface LogoProps extends React.SVGProps<SVGSVGElement> {
   circleColor?: string;
