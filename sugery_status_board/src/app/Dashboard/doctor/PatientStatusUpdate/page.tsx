@@ -29,13 +29,14 @@ export default function PatientStatusUpdatePage() {
           {/* Conditional Display */}
           {selectedPatient?.patientNumber ? (
             <section className="bg-white rounded-2xl shadow-md p-6 space-y-6 transition-all duration-200">
-              <PatientInfo />
+              <PatientInfo patientNumber={selectedPatient.patientNumber} />
               <hr className="border-gray-200" />
-              <StatusUpdateForm />
+              <StatusUpdateForm patientNumber={selectedPatient.patientNumber}/>
             </section>
           ) : (
             <StatusWorkflow />
           )}
+
         </div>
       </main>
     </ProtectedRoute>
