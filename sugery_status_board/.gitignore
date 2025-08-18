@@ -12,6 +12,8 @@
 # Allow .gitkeep in empty dirs
 !.gitkeep
 
+.next/
+
 
 # testing
 /coverage
