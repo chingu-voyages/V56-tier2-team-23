@@ -12,6 +12,7 @@
 # Allow .gitkeep in empty dirs
 !.gitkeep
 
+# adding the git next
 .next/
 
 
