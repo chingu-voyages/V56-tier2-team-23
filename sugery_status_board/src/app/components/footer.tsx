@@ -6,7 +6,7 @@ export default function Footer() {
   const teamMembers = [
     { name: "Tushar Parihar", role: "PO", git: "https://github.com/Tush-R" },
     { name: "Tibam Gisele", role: "SM", git: "https://github.com/Gisele-1" },
-    { name: "Jyotirmoy Das", role: "SM", git: "https://github.com/jd" },
+    { name: "Jyotirmoy Das", role: "SM", git: "https://github.com/jdx-code" },
     { name: "Ahamada", role: "DEV", git: "https://github.com/Ahmad-nba" },
     { name: "Shubham", role: "DEV", git: "https://github.com/Shubhambn" },
     { name: "Tibamwenda", role: "DEV", git: "https://github.com/AskTiba" },
