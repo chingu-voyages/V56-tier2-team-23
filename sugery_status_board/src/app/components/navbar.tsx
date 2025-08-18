@@ -5,13 +5,12 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { FaRegCalendar, FaBars, FaTimes } from "react-icons/fa";
 import { IoLogOutOutline } from "react-icons/io5";
-import { FiUser } from "react-icons/fi";
 import { RxDividerVertical } from "react-icons/rx";
 import clsx from "clsx";
-import Image from "next/image";
 import { useAuthStore } from "@/Features/auth/store/useAuthStore";
 import { navConfig } from "@/Features/auth/config/navconfig";
 import { useAuth } from "@/Features/auth/hooks/useAuth";
+import { SvgLogo, SvgUserplus } from "@/components/icons";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,25 +31,19 @@ export default function Navbar() {
   const logout = useAuthStore((state) => state.logout);
   return (
     <>
-      <nav className="w-full py-4 px-4 shadow-md bg-white flex justify-between items-center relative z-30">
+      <nav className="w-full px-4 shadow-md bg-viking-900 flex justify-between items-center relative z-30">
         {/* Logo and Title */}
-        <Link href="/" className="flex space-x-3">
-          <section>
-            <Image
-              src="/assets/logo.svg"
-              alt="App Logo"
-              width={160}
-              height={80}
-              className="object-contain p-1"
-            />
-            <p className="text-gray-600 text-sm mt-[-2dvh]">
-              Patient Progress Tracking
-            </p>
-          </section>
+        <Link href="/" className="flex items-center space-x-2 cursor-pointer">
+          <SvgLogo
+            className="w-32 h-20"
+            textColor="#edfcfe" // viking-50
+            circleColor="#48cae4" // viking-400
+            arcColor="#ade8f4" // viking-200
+          />
         </Link>
 
         {/* Date Display (Desktop Only) */}
-        <div className="hidden sm:flex items-center space-x-2 text-gray-700">
+        <div className="hidden sm:flex items-center space-x-2 text-viking-100">
           <FaRegCalendar />
           <p className="text-sm md:text-base">{date}</p>
         </div>
@@ -62,10 +55,10 @@ export default function Navbar() {
               key={path}
               href={path}
               className={clsx(
-                "rounded px-3 py-1 text-sm transition",
+                "rounded px-3 py-1 text-sm transition cursor-pointer",
                 pathname === path
-                  ? "bg-accentMain text-white font-semibold"
-                  : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                  ? "bg-viking-400 text-white font-semibold"
+                  : "bg-viking-800 text-viking-100 hover:bg-viking-700"
               )}
             >
               {label}
@@ -73,19 +66,22 @@ export default function Navbar() {
           ))}
           {isLoggedIn && (
             <section className="flex justify-center items-center space-x-2">
-              <RxDividerVertical className="size-6" />
-              <FiUser />
-              <p className="text-accentMain ">
+              <RxDividerVertical className="size-6 text-viking-400" />
+              <SvgUserplus className="text-viking-100" />
+              <p className="text-viking-400 ">
                 {fullName} ({role}){" "}
               </p>
-              <IoLogOutOutline className="size-6" onClick={() => logout()} />
+              <IoLogOutOutline
+                className="size-6 cursor-pointer text-viking-100"
+                onClick={() => logout()}
+              />
             </section>
           )}
         </div>
 
         {/* Hamburger for Mobile */}
         <FaBars
-          className="sm:hidden text-2xl text-gray-800 cursor-pointer"
+          className="sm:hidden text-2xl text-viking-100 cursor-pointer"
           onClick={() => setIsOpen(true)}
         />
       </nav>
@@ -97,18 +93,20 @@ export default function Navbar() {
             className="fixed inset-0 bg-opacity-40 z-20"
             onClick={() => setIsOpen(false)}
           />
-          <div className="fixed top-0 right-0 w-3/4 sm:hidden h-full bg-[#253237] text-white p-6 z-30 shadow-lg flex flex-col justify-between">
+          <div className="fixed top-0 right-0 w-3/4 sm:hidden h-full bg-viking-950 text-viking-100 p-6 z-30 shadow-lg flex flex-col justify-between">
             {/* Top: Date and Menu */}
             <div>
-              <p className="text-sm text-center mb-4 md:text-base">{date}</p>
+              <p className="text-sm text-center mb-4 md:text-base text-viking-100">
+                {date}
+              </p>
 
               {/* menu header */}
               <div className="flex justify-between items-center mb-8">
-                <h2 className="text-lg text-accentMain font-bold tracking-wide">
+                <h2 className="text-lg text-viking-400 font-bold tracking-wide">
                   Menu
                 </h2>
                 <FaTimes
-                  className="text-2xl text-accentMain cursor-pointer"
+                  className="text-2xl text-viking-100 cursor-pointer"
                   onClick={() => setIsOpen(false)}
                 />
               </div>
@@ -123,8 +121,8 @@ export default function Navbar() {
                     className={clsx(
                       "transition duration-150 pb-1",
                       pathname === path
-                        ? "text-white font-semibold border-b-2 border-accentMain"
-                        : "text-white hover:text-accentMain"
+                        ? "text-viking-50 font-semibold border-b-2 border-viking-400"
+                        : "text-viking-200 hover:text-viking-50"
                     )}
                   >
                     {label}
@@ -134,13 +132,13 @@ export default function Navbar() {
             </div>
 
             {/* Bottom: User Info & Logout */}
-            <div className="border-t border-gray-600 pt-4 mt-6 text-sm ">
+            <div className="border-t border-viking-700 pt-4 mt-6 text-sm text-viking-100">
               <p className="mb-1">{fullName}</p>
-              <p className="text-accentMain font-medium mb-3">{userRole}</p>
+              <p className="text-viking-400 font-medium mb-3">{userRole}</p>
               {isLoggedIn && (
                 <button
                   onClick={() => logout()}
-                  className="bg-accentMain text-white px-4 py-2 rounded hover:bg-opacity-80 transition"
+                  className="bg-viking-400 text-white px-4 py-2 rounded hover:bg-viking-700 transition cursor-pointer"
                 >
                   Logout
                 </button>
